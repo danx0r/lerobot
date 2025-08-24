@@ -27,7 +27,12 @@ from lerobot.datasets.lerobot_dataset import LeRobotDataset, LeRobotDatasetMetad
 from lerobot.datasets.utils import dataset_to_policy_features
 from lerobot.policies.diffusion.configuration_diffusion import DiffusionConfig
 from lerobot.policies.diffusion.modeling_diffusion import DiffusionPolicy
+import sys
+import select
 
+def kbhit():
+	r = select.select([sys.stdin], [], [], 0.01)
+	return len(r[0]) > 0
 
 def main():
     # Create a directory to store the training checkpoint.
@@ -35,7 +40,7 @@ def main():
     output_directory.mkdir(parents=True, exist_ok=True)
 
     # # Select your device
-    device = torch.device("cuda")
+    device = torch.device("cpu")
 
     # Number of offline training steps (we'll only do offline training for this example.)
     # Adjust as you prefer. 5000 steps are needed to get something worth evaluating.
@@ -108,12 +113,13 @@ def main():
             if step % log_freq == 0:
                 print(f"step: {step} loss: {loss.item():.3f}")
             step += 1
-            if step >= training_steps:
+            if step >= training_steps or kbhit():
                 done = True
                 break
 
     # Save a policy checkpoint.
-    policy.save_pretrained(output_directory)
+    if step % 25 == 0:
+        policy.save_pretrained(output_directory)
 
 
 if __name__ == "__main__":
