@@ -44,7 +44,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--policy", default="lerobot/diffusion_pusht")
 args = parser.parse_args() 
 
-pretrained_policy_path = args.poliocy
+pretrained_policy_path = args.policy
 
 policy = DiffusionPolicy.from_pretrained(pretrained_policy_path)
 
