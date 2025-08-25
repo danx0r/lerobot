@@ -132,7 +132,7 @@ else:
 fps = env.metadata["render_fps"]
 
 # Create a directory to store the video of the evaluation
-output_directory = Path(pretrained_policy_path.replace("/train/", "/eval/")
+output_directory = Path(pretrained_policy_path.replace("/train/", "/eval/"))
 output_directory.mkdir(parents=True, exist_ok=True)
 
 # Encode all frames into a mp4 video.
