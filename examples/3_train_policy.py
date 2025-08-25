@@ -29,19 +29,13 @@ from lerobot.policies.diffusion.configuration_diffusion import DiffusionConfig
 from lerobot.policies.diffusion.modeling_diffusion import DiffusionPolicy
 import sys
 import select
-
-MAX_STEPS=5000
-SAVE_EVERY=100
+import argparse
 
 def kbhit():
 	r = select.select([sys.stdin], [], [], 0.01)
 	return len(r[0]) > 0
 
 def main():
-    # Create a directory to store the training checkpoint.
-    # output_directory = Path("outputs/train/example_pusht_diffusion")
-    # output_directory.mkdir(parents=True, exist_ok=True)
-
     # # Select your device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -133,4 +127,10 @@ def main():
     policy.save_pretrained(output_directory)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--max_steps", required=True)
+    parser.add_argument("--save_every", required=True)
+    args = parser.parse_args() 
+    MAX_STEPS=args.max_steps
+    SAVE_EVERY=args.save_every
     main()
