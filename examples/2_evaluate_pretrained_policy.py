@@ -33,15 +33,13 @@ import argparse
 
 from lerobot.policies.diffusion.modeling_diffusion import DiffusionPolicy
 
-# Create a directory to store the video of the evaluation
-output_directory = Path("outputs/eval/example_pusht_diffusion")
-output_directory.mkdir(parents=True, exist_ok=True)
-
 # Select your device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--policy", default="lerobot/diffusion_pusht")
+parser.add_argument("--max_steps", type=int, default=300)
+parser.add_argument("--randseed", type=int, default=42)
 args = parser.parse_args() 
 
 pretrained_policy_path = args.policy
@@ -54,7 +52,7 @@ policy = DiffusionPolicy.from_pretrained(pretrained_policy_path)
 env = gym.make(
     "gym_pusht/PushT-v0",
     obs_type="pixels_agent_pos",
-    max_episode_steps=300,
+    max_episode_steps=args.max_steps,
 )
 
 # We can verify that the shapes of the features expected by the policy match the ones from the observations
@@ -69,7 +67,7 @@ print(env.action_space)
 
 # Reset the policy and environments to prepare for rollout
 policy.reset()
-numpy_observation, info = env.reset(seed=42)
+numpy_observation, info = env.reset(seed=args.randseed)
 
 # Prepare to collect every rewards and all the frames of the episode,
 # from initial state to final state.
@@ -133,6 +131,10 @@ else:
 
 # Get the speed of environment (i.e. its number of frames per second).
 fps = env.metadata["render_fps"]
+
+# Create a directory to store the video of the evaluation
+output_directory = Path(pretrained_policy_path.replace("/train/", "/eval/"))
+output_directory.mkdir(parents=True, exist_ok=True)
 
 # Encode all frames into a mp4 video.
 video_path = output_directory / "rollout.mp4"
