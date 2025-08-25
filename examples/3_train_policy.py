@@ -39,8 +39,8 @@ def kbhit():
 
 def main():
     # Create a directory to store the training checkpoint.
-    output_directory = Path("outputs/train/example_pusht_diffusion")
-    output_directory.mkdir(parents=True, exist_ok=True)
+    # output_directory = Path("outputs/train/example_pusht_diffusion")
+    # output_directory.mkdir(parents=True, exist_ok=True)
 
     # # Select your device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -122,10 +122,14 @@ def main():
 
             # Save a policy checkpoint once in a blue moon:
             if step % SAVE_EVERY == 0:
-                print ("Saving checkpoint:", output_directory)
-                policy.save_pretrained(output_directory)
                 output_directory = Path(f"outputs/train/example_pusht_diffusion_{step}")
                 output_directory.mkdir(parents=True, exist_ok=True)
+                print ("Saving checkpoint:", output_directory)
+                policy.save_pretrained(output_directory)
+
+    output_directory = Path(f"outputs/train/example_pusht_diffusion_{step}")
+    output_directory.mkdir(parents=True, exist_ok=True)
+    print ("Saving checkpoint:", output_directory)
     policy.save_pretrained(output_directory)
 
 if __name__ == "__main__":
