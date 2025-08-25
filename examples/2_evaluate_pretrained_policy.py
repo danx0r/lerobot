@@ -29,6 +29,7 @@ import gymnasium as gym
 import imageio
 import numpy
 import torch
+import argparse
 
 from lerobot.policies.diffusion.modeling_diffusion import DiffusionPolicy
 
@@ -39,10 +40,11 @@ output_directory.mkdir(parents=True, exist_ok=True)
 # Select your device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Provide the [hugging face repo id](https://huggingface.co/lerobot/diffusion_pusht):
-# pretrained_policy_path = "lerobot/diffusion_pusht"
-# OR a path to a local outputs/train folder.
-pretrained_policy_path = Path("outputs/train/example_pusht_diffusion")
+parser = argparse.ArgumentParser()
+parser.add_argument("--policy", default="lerobot/diffusion_pusht")
+args = parser.parse_args() 
+
+pretrained_policy_path = args.poliocy
 
 policy = DiffusionPolicy.from_pretrained(pretrained_policy_path)
 
