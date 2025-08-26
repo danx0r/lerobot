@@ -129,7 +129,7 @@ def main():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--max_steps", type=int, default=5000)
-    parser.add_argument("--save_every", required=True)
+    parser.add_argument("--save_every", type=int, default=500)
     args = parser.parse_args() 
     MAX_STEPS=args.max_steps
     SAVE_EVERY=args.save_every
