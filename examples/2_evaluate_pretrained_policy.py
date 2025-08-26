@@ -39,6 +39,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 parser = argparse.ArgumentParser()
 parser.add_argument("--policy", default="lerobot/diffusion_pusht")
 parser.add_argument("--max_steps", type=int, default=300)
+parser.add_argument("--randseed", type=int, default=42)
 args = parser.parse_args() 
 
 pretrained_policy_path = args.policy
@@ -66,7 +67,7 @@ print(env.action_space)
 
 # Reset the policy and environments to prepare for rollout
 policy.reset()
-numpy_observation, info = env.reset(seed=42)
+numpy_observation, info = env.reset(seed=args.randseed)
 
 # Prepare to collect every rewards and all the frames of the episode,
 # from initial state to final state.
